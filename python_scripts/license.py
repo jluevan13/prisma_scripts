@@ -58,7 +58,6 @@ def get_credit_usage(group_id, time, unit):
         "x-redlock-auth": token,
     }
     response = requests.request("POST", url, headers=headers, data=usage_payload_json)
-    # print(response.json())
     return response.json()
 
 
