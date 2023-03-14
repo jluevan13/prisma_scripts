@@ -58,9 +58,13 @@ def get_credit_usage(group_id, time, unit):
         "x-redlock-auth": token,
     }
     response = requests.request("POST", url, headers=headers, data=usage_payload_json)
+    # print(response.json())
     return response.json()
 
 
 for group in account_groups.json():
     usage_by_group = get_credit_usage(group["id"], "1", "month")
-    print(f'{group["id"]} ({group["name"]}): {usage_by_group["stats"]["total"]}')
+    for account in usage_by_group["items"]:
+        print(
+            f"{group['name']}, {group['id']}, {account['account']['name']}, {account['account']['id']}, {account['total']}"
+        )
