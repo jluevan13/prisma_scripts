@@ -26,7 +26,6 @@ url = "https://api4.prismacloud.io/cloud/group"
 
 group_payload = {}
 group_payload["accountIds"] = []
-group_payload["accountGroupIds"] = ["1a687eb3-6d92-4142-8e5e-544b7ebc2c09"]
 headers = {"Accept": "application/json; charset=UTF-8", "x-redlock-auth": token}
 
 account_groups = requests.request("GET", url, headers=headers, data=group_payload)
