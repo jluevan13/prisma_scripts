@@ -22,7 +22,7 @@ auth_token_data = auth_token.json()
 token = auth_token_data["token"]
 
 ### Get Group Ids
-url = "https://api4.prismacloud.io/cloud/group"
+url = "https://api4.prismacloud.io/cloud/group"  # update url based on tenant (i.e, app3, app2)
 
 group_payload = {}
 group_payload["accountIds"] = []
@@ -33,7 +33,7 @@ x = account_groups.json()
 
 
 def get_credit_usage(group_id, time, unit):
-    url = "https://api4.prismacloud.io/license/api/v2/usage"
+    url = "https://api4.prismacloud.io/license/api/v2/usage"  # update url based on tenant (i.e, app3, app2)
 
     usage_payload = {}
     usage_payload["accountIds"] = []
