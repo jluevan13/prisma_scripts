@@ -26,9 +26,11 @@ url = "https://api4.prismacloud.io/cloud/group"
 
 group_payload = {}
 group_payload["accountIds"] = []
+group_payload["accountGroupIds"] = ["1a687eb3-6d92-4142-8e5e-544b7ebc2c09"]
 headers = {"Accept": "application/json; charset=UTF-8", "x-redlock-auth": token}
 
-account_groups = requests.request("GET", url, headers=headers, data=payload)
+account_groups = requests.request("GET", url, headers=headers, data=group_payload)
+x = account_groups.json()
 
 
 def get_credit_usage(group_id, time, unit):
@@ -62,8 +64,13 @@ def get_credit_usage(group_id, time, unit):
 
 
 for group in account_groups.json():
+    try:
+        cost_center = json.loads(group.get("description"))["costCenter"]
+    except:
+        cost_center = "No Cost Center Defined"
+
     usage_by_group = get_credit_usage(group["id"], "1", "month")
     for account in usage_by_group["items"]:
         print(
-            f"{group['name']}, {group['id']}, {account['account']['name']}, {account['account']['id']}, {account['total']}"
+            f"GroupName:{group['name']}, GroupId:{group['id']}, CostCenter:{cost_center} AccountName:{account['account']['name']}, AccountId:{account['account']['id']}, AccountCreditUsage:{account['total']}"
         )
