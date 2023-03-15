@@ -71,5 +71,5 @@ for group in account_groups.json():
     usage_by_group = get_credit_usage(group["id"], "1", "month")
     for account in usage_by_group["items"]:
         print(
-            f"GroupName:{group['name']}, GroupId:{group['id']}, CostCenter:{cost_center} AccountName:{account['account']['name']}, AccountId:{account['account']['id']}, AccountCreditUsage:{account['total']}"
+            f"GroupName:{group['name']}, GroupId:{group['id']}, CostCenter:{cost_center}, AccountName:{account['account']['name']}, AccountId:{account['account']['id']}, AccountCreditUsage:{account['total']}"
         )
