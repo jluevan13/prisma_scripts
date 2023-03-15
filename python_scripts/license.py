@@ -64,7 +64,7 @@ def get_credit_usage(group_id, time, unit):
 
 for group in account_groups.json():
     try:
-        cost_center = json.loads(group.get("description"))["costCenter"]
+        cost_center = json.loads(group["description"]).get("costCenter")
     except:
         cost_center = "No Cost Center Defined"
 
