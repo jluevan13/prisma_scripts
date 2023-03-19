@@ -4,7 +4,7 @@ import os
 import boto3
 from botocore.exceptions import ClientError
 
-api = "api4"  # set api based on tenant (i.e, api3, api2, api)
+api = "api4"  # set api based on tenant (api3, api2, api)
 
 ### Create Auth Token for tenant
 login_url = f"https://{api}.prismacloud.io/login"
