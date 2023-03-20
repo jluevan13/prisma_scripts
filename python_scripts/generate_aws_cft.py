@@ -28,7 +28,7 @@ features_url = f"https://{api}.prismacloud.io/cas/v1/features/cloud/aws"
 
 supported_features_payload = json.dumps(
     {
-        "accountType": "organization",
+        "accountType": "organization",  # change this to account for a individual account not in an organization
         "awsPartition": "us-east-1",
         "rootSyncEnabled": True,
     }
