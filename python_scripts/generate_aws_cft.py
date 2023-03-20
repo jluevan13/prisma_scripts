@@ -44,6 +44,7 @@ supported_features = requests.request(
 )
 
 # print(supported_features.json())
+# Supported Features -> 'supportedFeatures': ['Agentless Scanning', 'Auto Protect', 'Cloud Visibility Compliance and Governance', 'Remediation', 'Serverless Function Scanning']
 
 
 ## Generate CFT
