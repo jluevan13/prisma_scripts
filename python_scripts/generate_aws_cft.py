@@ -5,6 +5,21 @@ import boto3
 from botocore.exceptions import ClientError
 from urllib.parse import unquote
 
+
+"""
+this script is used to automatically update the cloudformation stack for the Prisma Cloud Role.
+It can be used to update the role at the organization level, or for individual accounts not in an organization. 
+
+To use the script, you need to define:
+export awsAccessKey=<aws access key>
+export awsSecretKey=<aws secret key>
+export prismaUserName=<prisma cloud access key>
+export prismaSecretKey=<prisma cloud secret key>
+export awsAccount=<aws account id>
+export cfStackId=<cloudformation stack name or arn>
+export rootOU=<root ou id>
+"""
+
 api = "api4"  # set api based on tenant (api3, api2, api)
 prisma_role_name = "PrismaCloudRole"  # update with prisma cloud role name that is defined in prisma console
 
