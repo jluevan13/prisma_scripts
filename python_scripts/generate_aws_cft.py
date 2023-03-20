@@ -6,9 +6,6 @@ from botocore.exceptions import ClientError
 from urllib.parse import unquote
 
 api = "api4"  # set api based on tenant (api3, api2, api)
-account_id = os.environ.get("awsAccount")
-root_ou = os.environ.get("rootOU")  # root ou id
-cf_stack_arn = os.environ.get("cfStackId")  # cloudformation stack name or id
 prisma_role_name = "PrismaCloudRole"  # update with prisma cloud role name that is defined in prisma console
 
 ### Set up aws credentials
@@ -68,7 +65,7 @@ template_url = f"https://{api}.prismacloud.io/cas/v1/aws_template/presigned_url"
 template_payload = json.dumps(
     {
         "accountType": "organization",  # change this to account for an individual account not in an organization
-        "accountId": account_id,
+        "accountId": os.environ.get("awsAccount"),
         "awsPartition": "us-east-1",
         "features": [
             "Agentless Scanning",
@@ -93,14 +90,17 @@ template_response = requests.request(
 ### Update the stack with the new template
 try:
     response = cf_client.update_stack(
-        StackName=cf_stack_arn,
+        StackName=os.environ.get("cfStackId"),
         TemplateURL=unquote(
             template_response.json()["createStackLinkWithS3PresignedUrl"].split(
                 "templateURL="
             )[1]
         ),
         Parameters=[
-            {"ParameterKey": "OrganizationalUnitIds", "ParameterValue": root_ou},
+            {
+                "ParameterKey": "OrganizationalUnitIds",
+                "ParameterValue": os.environ.get("rootOU"),
+            },
             {"ParameterKey": "PrismaCloudRoleName", "ParameterValue": prisma_role_name},
         ],
         Capabilities=["CAPABILITY_NAMED_IAM"],
