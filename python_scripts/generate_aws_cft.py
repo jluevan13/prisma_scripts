@@ -24,7 +24,7 @@ token = auth_token_data["token"]
 
 
 ### Get supported features
-url = f"https://{api}.prismacloud.io/cas/v1/features/cloud/aws"
+features_url = f"https://{api}.prismacloud.io/cas/v1/features/cloud/aws"
 
 supported_features_payload = json.dumps(
     {
@@ -40,7 +40,7 @@ headers = {
 }
 
 supported_features = requests.request(
-    "POST", url, headers=headers, data=supported_features_payload
+    "POST", features_url, headers=headers, data=supported_features_payload
 )
 
 # print(supported_features.json())
