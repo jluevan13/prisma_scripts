@@ -91,13 +91,15 @@ s3_client.meta.client.upload_file(
 
 root_ou = os.environ.get("rootOU")
 cf_stack_arn = os.environ.get("cfStackId")
+prisma_role_name = "PrismaCloudRole"  # update with prisma cloud role name that is defined in prisma console
 
 try:
     response = cf_client.update_stack(
         StackName=cf_stack_arn,
         TemplateURL=f"https://{bucket_name}.s3.amazonaws.com/{object_key}",
         Parameters=[
-            {"ParameterKey": "OrganizationalUnitIds", "ParameterValue": root_ou}
+            {"ParameterKey": "OrganizationalUnitIds", "ParameterValue": root_ou},
+            {"ParameterKey": "PrismaCloudRoleName", "ParameterValue": prisma_role_name},
         ],
         Capabilities=["CAPABILITY_NAMED_IAM"],
     )
