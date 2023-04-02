@@ -111,17 +111,7 @@ for tenant in tenants:
     group_credits = [
         credit_output(tenant["api"], group)
         for group in account_groups
-        if group["name"] in exclude_groups
+        if group["name"] not in exclude_groups
     ]
 
     # print(f"{tenant['tenantName']} -> {group_credits}")
-
-
-# for tenant in tenants:
-#     token = login_prisma(tenant["api"], tenant["username"], tenant["password"])
-
-#     account_groups = get_group_ids(tenant["api"], token)
-
-#     for group in account_groups:
-#         x = credit_output(tenant["api"], group)
-#         print(x)
