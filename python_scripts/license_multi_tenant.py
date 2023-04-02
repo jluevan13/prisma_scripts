@@ -113,5 +113,3 @@ for tenant in tenants:
         for group in account_groups
         if group["name"] not in exclude_groups
     ]
-
-    # print(f"{tenant['tenantName']} -> {group_credits}")
