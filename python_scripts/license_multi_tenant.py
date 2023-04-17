@@ -76,6 +76,9 @@ def get_credit_usage(api, group_id, time, unit):
     return response.json()
 
 
+exclude_account_name = ['"others"']
+
+
 def credit_output(api, group):
     try:
         cost_center = json.loads(group["description"]).get("costCenter")
@@ -83,18 +86,10 @@ def credit_output(api, group):
         cost_center = "No Cost Center Defined"
     usage_by_group = get_credit_usage(api, group["id"], "1", "month")
     for account in usage_by_group["items"]:
-        print(
-            f"GroupName:{group['name']}, GroupId:{group['id']}, GroupCostCenter:{cost_center}, AccountName:{account['account']['name']}, AccountId:{account['account']['id']}, AccountCreditUsage:{account['total']}"
-        )
-
-    # output = [
-    #     f"GroupName:{group['name']}, GroupId:{group['id']}, GroupCostCenter:{cost_center}, AccountName:{account['account']['name']}, AccountId:{account['account']['id']}, AccountCreditUsage:{account['total']}"
-    #     for account in usage_by_group["items"]
-    # ]
-
-    # print(output)
-
-    # return output
+        if account["account"]["name"] not in exclude_account_name:
+            print(
+                f"GroupName:{group['name']}, GroupId:{group['id']}, GroupCostCenter:{cost_center}, AccountName:{account['account']['name']}, AccountId:{account['account']['id']}, AccountCreditUsage:{account['total']}"
+            )
 
 
 exclude_groups = [
