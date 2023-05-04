@@ -105,8 +105,24 @@ def list_accounts(api, token):
         "x-redlock-auth": token,
     }
 
-    response = requests.request("GET", url, headers=headers, data=payload)
-    return response.json()
+    account_list = requests.request("GET", url, headers=headers, data=payload).json()
+
+    orgs = [account for account in account_list if account["accountType"] != "account"]
+    for org in orgs:
+        cloud_type = org["cloudType"]
+        account_id = org["accountId"]
+
+        org_url = (
+            f"https://{api}.prismacloud.io/cloud/{cloud_type}/{account_id}/project"
+        )
+
+        org_response = requests.request(
+            "GET", org_url, headers=headers, data=payload
+        ).json()
+        for member in org_response:
+            if member["accountType"] == "account":
+                account_list.append(member)
+    return account_list
 
 
 def get_group_ids(api, token):
