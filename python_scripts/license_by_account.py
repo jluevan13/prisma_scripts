@@ -6,17 +6,29 @@ from pandas import DataFrame as df
 
 def credit_allocator():
     tenants = [
+        # {
+        #     "tenantName": "tenant4",
+        #     "api": "api",
+        #     "username": os.environ.get("prismaUserName"),
+        #     "password": os.environ.get("prismaSecretKey"),
+        # },
+        # {
+        #     "tenantName": "tenant2",
+        #     "api": "api",
+        #     "username": os.environ.get("prismaUserName2"),
+        #     "password": os.environ.get("prismaSecretKey2"),
+        # },
+        # {
+        #     "tenantName": "tenant3",
+        #     "api": "api2",
+        #     "username": os.environ.get("prismaUserName3"),
+        #     "password": os.environ.get("prismaSecretKey3"),
+        # },
         {
             "tenantName": "tenant4",
             "api": "api4",
-            "username": os.environ.get("prismaUserName"),
-            "password": os.environ.get("prismaSecretKey"),
-        },
-        {
-            "tenantName": "tenant2",
-            "api": "api2",
-            "username": os.environ.get("prismaUserName2"),
-            "password": os.environ.get("prismaSecretKey2"),
+            "username": os.environ.get("prismaUserName4"),
+            "password": os.environ.get("prismaSecretKey4"),
         },
     ]
     allocated_accounts = []
@@ -140,7 +152,12 @@ def map_accounts_groups(usage_by_account, account_info, groups_meta):
         for account in account_info:
             if account["accountId"] == item["accountId"]:
                 group_num = 1
-                for group in account["groups"]:
+                sorted_groups = sorted(
+                    account["groups"],
+                    key=lambda d: "All" in d["name"],
+                    reverse=False,
+                )
+                for group in sorted_groups:
                     group_descrption = [
                         group_info["description"]
                         for group_info in groups_meta
