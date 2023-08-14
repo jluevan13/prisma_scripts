@@ -49,6 +49,8 @@ def credit_allocator():
 
         role_id = get_role_id(tenant["api"], token, licensing_role, licensing_group)
 
+        print(role_id)
+
         update_user_role(
             tenant["api"], token, licensing_role, licensing_group, groups, role_id
         )
@@ -171,19 +173,15 @@ def get_role_id(api, token, licensing_role, licensing_group):
     roles_list = requests.request(
         "GET", url, headers=headers, data=get_role_payload
     ).json()
-    role_id = []
-    for role in roles_list:
-        if role["name"] == licensing_role:
-            role_id.append(role["id"])
+
+    role_id = [role["id"] for role in roles_list if role["name"] == licensing_role]
     return role_id[0]
 
 
 def update_user_role(
     api, token, licensing_role, licensing_group, account_groups, role_id
 ):
-    account_group_ids = []
-    for group in account_groups:
-        account_group_ids.append(group["id"])
+    account_group_ids = [group["id"] for group in account_groups]
 
     url = f"https://{api}.prismacloud.io/user/role/{role_id}"
 
