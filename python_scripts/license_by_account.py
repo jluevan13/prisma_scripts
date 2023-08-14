@@ -49,8 +49,6 @@ def credit_allocator():
 
         role_id = get_role_id(tenant["api"], token, licensing_role, licensing_group)
 
-        print(role_id)
-
         update_user_role(
             tenant["api"], token, licensing_role, licensing_group, groups, role_id
         )
