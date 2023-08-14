@@ -6,12 +6,12 @@ from pandas import DataFrame as df
 
 def credit_allocator():
     tenants = [
-        # {
-        #     "tenantName": "tenant4",
-        #     "api": "api",
-        #     "username": os.environ.get("prismaUserName"),
-        #     "password": os.environ.get("prismaSecretKey"),
-        # },
+        {
+            "tenantName": "tenant4",
+            "api": "api4",
+            "username": os.environ.get("prismaUserName"),
+            "password": os.environ.get("prismaSecretKey"),
+        },
         # {
         #     "tenantName": "tenant2",
         #     "api": "api",
@@ -24,13 +24,19 @@ def credit_allocator():
         #     "username": os.environ.get("prismaUserName3"),
         #     "password": os.environ.get("prismaSecretKey3"),
         # },
-        {
-            "tenantName": "tenant4",
-            "api": "api4",
-            "username": os.environ.get("prismaUserName4"),
-            "password": os.environ.get("prismaSecretKey4"),
-        },
+        # {
+        #     "tenantName": "tenant4",
+        #     "api": "api2-eu",
+        #     "username": os.environ.get("prismaUserName4"),
+        #     "password": os.environ.get("prismaSecretKey4"),
+        # },
     ]
+
+    licensing_role = "Licensing Role"  # role name of licensing role
+    licensing_group = (
+        "Licensing Group"  # group name of Permission Group assigned to licensing role
+    )
+
     allocated_accounts = []
     for tenant in tenants:
         token = login_prisma(tenant["api"], tenant["username"], tenant["password"])
@@ -40,6 +46,12 @@ def credit_allocator():
         account_info = list_accounts(tenant["api"], token)
 
         groups = get_group_ids(tenant["api"], token)
+
+        role_id = get_role_id(tenant["api"], token, licensing_role, licensing_group)
+
+        update_user_role(
+            tenant["api"], token, licensing_role, licensing_group, groups, role_id
+        )
 
         mapped_accounts = map_accounts_groups(usage_by_account, account_info, groups)
 
@@ -145,6 +157,52 @@ def get_group_ids(api, token):
     headers = {"Accept": "application/json; charset=UTF-8", "x-redlock-auth": token}
 
     return requests.request("GET", url, headers=headers, data=group_payload).json()
+
+
+def get_role_id(api, token, licensing_role, licensing_group):
+    url = f"https://{api}.prismacloud.io/user/role"
+    get_role_payload = {}
+
+    headers = {
+        "Accept": "application/json; charset=UTF-8",
+        "x-redlock-auth": token,
+    }
+
+    roles_list = requests.request(
+        "GET", url, headers=headers, data=get_role_payload
+    ).json()
+    role_id = []
+    for role in roles_list:
+        if role["name"] == licensing_role:
+            role_id.append(role["id"])
+    return role_id[0]
+
+
+def update_user_role(
+    api, token, licensing_role, licensing_group, account_groups, role_id
+):
+    account_group_ids = []
+    for group in account_groups:
+        account_group_ids.append(group["id"])
+
+    url = f"https://{api}.prismacloud.io/user/role/{role_id}"
+
+    role_payload = {
+        "name": licensing_role,  # Update this to your role name
+        "description": "Updated Licensing Role with all account groups",  # Update description as needed
+        "accountGroupIds": account_group_ids,
+        "roleType": licensing_group,
+    }
+
+    role_payload_json = json.dumps(role_payload)
+
+    headers = {
+        "Content-Type": "application/json; charset=UTF-8",
+        "Accept": "application/json; charset=UTF-8",
+        "x-redlock-auth": token,
+    }
+    response = requests.request("PUT", url, headers=headers, data=role_payload_json)
+    return response
 
 
 def map_accounts_groups(usage_by_account, account_info, groups_meta):
